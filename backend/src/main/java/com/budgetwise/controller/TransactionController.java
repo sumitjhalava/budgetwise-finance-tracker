@@ -1,0 +1,142 @@
+package com.budgetwise.controller;
+
+import com.budgetwise.dto.TransactionRequest;
+import com.budgetwise.dto.TransactionResponse;
+import com.budgetwise.model.Transaction;
+import com.budgetwise.model.User;
+import com.budgetwise.repository.TransactionRepository;
+import com.budgetwise.repository.UserRepository;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/transactions")
+public class TransactionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+    
+    private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
+
+    public TransactionController(TransactionRepository transactionRepository, UserRepository userRepository) {
+        this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
+    }
+
+    @PostMapping
+    public ResponseEntity<TransactionResponse> createTransaction(@Valid @RequestBody TransactionRequest request, Authentication auth) {
+        try {
+            User user = userRepository.findByEmail(auth.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            Transaction transaction = new Transaction();
+            transaction.setDescription(request.getDescription());
+            transaction.setAmount(request.getAmount());
+            transaction.setType(request.getType());
+            transaction.setCategory(request.getCategory());
+            transaction.setDate(request.getDate());
+            transaction.setUser(user);
+
+            Transaction saved = transactionRepository.save(transaction);
+            return ResponseEntity.ok(mapToResponse(saved));
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid transaction data: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            logger.error("Failed to create transaction: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TransactionResponse>> getUserTransactions(Authentication auth) {
+        try {
+            User user = userRepository.findByEmail(auth.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            List<Transaction> transactions = transactionRepository.findByUserOrderByCreatedAtDesc(user);
+            List<TransactionResponse> response = transactions.stream()
+                    .map(this::mapToResponse)
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Failed to fetch transactions: {}", e.getMessage(), e);
+            return ResponseEntity.ok(List.of());
+        }
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<Map<String, Object>> getTransactionSummary(Authentication auth) {
+        try {
+            User user = userRepository.findByEmail(auth.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            Double totalIncome = transactionRepository.sumAmountByUserAndType(user, "income");
+            Double totalExpenses = transactionRepository.sumAmountByUserAndType(user, "expense");
+            
+            totalIncome = totalIncome != null ? totalIncome : 0.0;
+            totalExpenses = totalExpenses != null ? totalExpenses : 0.0;
+
+            List<Object[]> expensesByCategory = transactionRepository.getExpensesByCategory(user);
+            Map<String, Double> categoryMap = new HashMap<>();
+            for (Object[] row : expensesByCategory) {
+                categoryMap.put((String) row[0], (Double) row[1]);
+            }
+
+            Map<String, Object> summary = new HashMap<>();
+            summary.put("totalIncome", totalIncome);
+            summary.put("totalExpenses", totalExpenses);
+            summary.put("balance", totalIncome - totalExpenses);
+            summary.put("expensesByCategory", categoryMap);
+
+            return ResponseEntity.ok(summary);
+        } catch (Exception e) {
+            logger.error("Failed to generate transaction summary: {}", e.getMessage(), e);
+            Map<String, Object> emptySummary = new HashMap<>();
+            emptySummary.put("totalIncome", 0.0);
+            emptySummary.put("totalExpenses", 0.0);
+            emptySummary.put("balance", 0.0);
+            emptySummary.put("expensesByCategory", new HashMap<>());
+            return ResponseEntity.ok(emptySummary);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id, Authentication auth) {
+        User user = userRepository.findByEmail(auth.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Transaction transaction = transactionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+
+        if (!transaction.getUser().getId().equals(user.getId())) {
+            return ResponseEntity.status(403).build();
+        }
+
+        transactionRepository.delete(transaction);
+        return ResponseEntity.ok().build();
+    }
+
+    private TransactionResponse mapToResponse(Transaction transaction) {
+        TransactionResponse response = new TransactionResponse();
+        response.setId(transaction.getId());
+        response.setDescription(transaction.getDescription());
+        response.setAmount(transaction.getAmount());
+        response.setType(transaction.getType());
+        response.setCategory(transaction.getCategory());
+        response.setDate(transaction.getDate());
+        response.setCreatedAt(transaction.getCreatedAt());
+        return response;
+    }
+}
