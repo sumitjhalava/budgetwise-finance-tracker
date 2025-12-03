@@ -26,6 +26,7 @@ export const transactionAPI = {
   create: (transaction) => api.post('/api/transactions', transaction),
   getAll: () => api.get('/api/transactions'),
   getSummary: () => api.get('/api/transactions/summary'),
+  getMonthlySummary: (year, month) => api.get(`/api/transactions/monthly-summary?year=${year}&month=${month}`),
   delete: (id) => api.delete(`/api/transactions/${id}`),
 };
 

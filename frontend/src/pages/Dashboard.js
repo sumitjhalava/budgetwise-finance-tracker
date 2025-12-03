@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../components/Layout';
+import MonthlySummaryPanel from '../components/MonthlySummaryPanel';
 import { transactionAPI } from '../services/api';
 
 const Dashboard = ({ user, setUser }) => {
@@ -194,6 +195,9 @@ const Dashboard = ({ user, setUser }) => {
             </div>
           </div>
         </div>
+
+        {/* Monthly Summary */}
+        <MonthlySummaryPanel user={user} />
 
         {/* Charts Section */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
