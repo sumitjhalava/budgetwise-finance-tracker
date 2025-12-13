@@ -7,6 +7,7 @@ import com.budgetwise.model.Transaction;
 import com.budgetwise.model.User;
 import com.budgetwise.repository.TransactionRepository;
 import com.budgetwise.repository.UserRepository;
+import com.budgetwise.service.AutoCategoryService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.dao.DataAccessException;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -30,10 +32,12 @@ public class TransactionController {
     
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
+    private final AutoCategoryService autoCategoryService;
 
-    public TransactionController(TransactionRepository transactionRepository, UserRepository userRepository) {
+    public TransactionController(TransactionRepository transactionRepository, UserRepository userRepository, AutoCategoryService autoCategoryService) {
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
+        this.autoCategoryService = autoCategoryService;
     }
 
     @PostMapping
@@ -46,16 +50,32 @@ public class TransactionController {
             transaction.setDescription(request.getDescription());
             transaction.setAmount(request.getAmount());
             transaction.setType(request.getType());
-            transaction.setCategory(request.getCategory());
             transaction.setDate(request.getDate());
             transaction.setUser(user);
+
+            // Auto-categorization logic
+            String predictedCategory = autoCategoryService.predictCategory(request.getDescription());
+            
+            transaction.setPredictedCategory(predictedCategory);
+            
+            // Use predicted category if no category provided, otherwise use manual category
+            if (request.getCategory() == null || request.getCategory().trim().isEmpty() || request.getCategory().equals(predictedCategory)) {
+                transaction.setCategory(predictedCategory);
+                transaction.setCategorySource("auto");
+            } else {
+                transaction.setCategory(request.getCategory());
+                transaction.setCategorySource("manual");
+            }
 
             Transaction saved = transactionRepository.save(transaction);
             return ResponseEntity.ok(mapToResponse(saved));
         } catch (IllegalArgumentException e) {
             logger.error("Invalid transaction data: {}", e.getMessage(), e);
             return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
+            logger.error("Database error creating transaction: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (RuntimeException e) {
             logger.error("Failed to create transaction: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -73,7 +93,7 @@ public class TransactionController {
                     .collect(Collectors.toList());
 
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.error("Failed to fetch transactions: {}", e.getMessage(), e);
             return ResponseEntity.ok(List.of());
         }
@@ -104,7 +124,15 @@ public class TransactionController {
             summary.put("expensesByCategory", categoryMap);
 
             return ResponseEntity.ok(summary);
-        } catch (Exception e) {
+        } catch (DataAccessException e) {
+            logger.error("Database error generating transaction summary: {}", e.getMessage(), e);
+            Map<String, Object> emptySummary = new HashMap<>();
+            emptySummary.put("totalIncome", 0.0);
+            emptySummary.put("totalExpenses", 0.0);
+            emptySummary.put("balance", 0.0);
+            emptySummary.put("expensesByCategory", new HashMap<>());
+            return ResponseEntity.ok(emptySummary);
+        } catch (RuntimeException e) {
             logger.error("Failed to generate transaction summary: {}", e.getMessage(), e);
             Map<String, Object> emptySummary = new HashMap<>();
             emptySummary.put("totalIncome", 0.0);
@@ -115,20 +143,64 @@ public class TransactionController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionResponse> updateTransaction(
+            @PathVariable Long id,
+            @Valid @RequestBody TransactionRequest request,
+            Authentication auth) {
+        try {
+            User user = userRepository.findByEmail(auth.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            Transaction transaction = transactionRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Transaction not found"));
+
+            if (!transaction.getUser().getId().equals(user.getId())) {
+                return ResponseEntity.status(403).build();
+            }
+
+            transaction.setDescription(request.getDescription());
+            transaction.setAmount(request.getAmount());
+            transaction.setType(request.getType());
+            transaction.setCategory(request.getCategory());
+            transaction.setDate(request.getDate());
+
+            Transaction updated = transactionRepository.save(transaction);
+            return ResponseEntity.ok(mapToResponse(updated));
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid transaction data: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        } catch (DataAccessException e) {
+            logger.error("Database error updating transaction: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (RuntimeException e) {
+            logger.error("Failed to update transaction: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id, Authentication auth) {
-        User user = userRepository.findByEmail(auth.getName())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        try {
+            User user = userRepository.findByEmail(auth.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+            Transaction transaction = transactionRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Transaction not found"));
 
-        if (!transaction.getUser().getId().equals(user.getId())) {
-            return ResponseEntity.status(403).build();
+            if (!transaction.getUser().getId().equals(user.getId())) {
+                return ResponseEntity.status(403).build();
+            }
+
+            transactionRepository.delete(transaction);
+            return ResponseEntity.ok().build();
+        } catch (DataAccessException e) {
+            logger.error("Database error deleting transaction: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (RuntimeException e) {
+            logger.error("Failed to delete transaction: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        transactionRepository.delete(transaction);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/monthly-summary")
@@ -176,19 +248,48 @@ public class TransactionController {
             summary.setLargestExpense(largestExpense);
             
             return ResponseEntity.ok(summary);
-        } catch (Exception e) {
+        } catch (ClassCastException e) {
+            logger.error("Data type conversion error in monthly summary: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (RuntimeException e) {
             logger.error("Failed to generate monthly summary: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    @PostMapping("/predict-category")
+    public ResponseEntity<Map<String, Object>> predictCategory(@RequestBody Map<String, String> request) {
+        try {
+            String description = request.get("description");
+            String predictedCategory = autoCategoryService.predictCategory(description);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("predictedCategory", predictedCategory);
+            
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid input for category prediction: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        } catch (RuntimeException e) {
+            logger.error("Failed to predict category: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     private TransactionResponse mapToResponse(Transaction transaction) {
+        if (transaction == null) {
+            throw new IllegalArgumentException("Transaction cannot be null");
+        }
+        
         TransactionResponse response = new TransactionResponse();
         response.setId(transaction.getId());
         response.setDescription(transaction.getDescription());
         response.setAmount(transaction.getAmount());
         response.setType(transaction.getType());
         response.setCategory(transaction.getCategory());
+        response.setPredictedCategory(transaction.getPredictedCategory());
+        response.setCategorySource(transaction.getCategorySource());
+
         response.setDate(transaction.getDate());
         response.setCreatedAt(transaction.getCreatedAt());
         return response;

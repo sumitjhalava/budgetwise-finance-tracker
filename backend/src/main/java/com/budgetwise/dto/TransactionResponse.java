@@ -12,6 +12,9 @@ public class TransactionResponse {
     private Double amount;
     private String type;
     private String category;
+    private String predictedCategory;
+    private String categorySource;
+
     private LocalDate date;
     private LocalDateTime createdAt;
 }

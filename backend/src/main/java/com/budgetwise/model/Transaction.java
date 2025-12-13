@@ -33,6 +33,13 @@ public class Transaction {
     @NotBlank(message = "Category is required")
     private String category;
 
+    private String predictedCategory;
+
+    @Column(name = "category_source")
+    private String categorySource = "manual";
+
+
+
     @Column(name = "transaction_date")
     private LocalDate date;
 
