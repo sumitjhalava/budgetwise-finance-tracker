@@ -12,7 +12,6 @@ The Auto-Categorization System intelligently suggests transaction categories as 
 
 ### Real-Time Intelligence
 - **Instant suggestions** as users type (triggers after 2+ characters)
-- **Confidence scoring** shows AI certainty level (0-100%)
 - **Smart auto-fill** only overwrites when appropriate
 - **Sub-second response** times for seamless UX
 
@@ -30,7 +29,7 @@ The Auto-Categorization System intelligently suggests transaction categories as 
 ### User Experience
 - **Non-intrusive**: Works silently in background
 - **User control**: Manual overrides always respected
-- **Visual feedback**: Shows predicted category and confidence
+- **Visual feedback**: Shows predicted category
 - **Seamless integration**: No workflow disruption
 
 ## 🔧 Technical Implementation
@@ -40,7 +39,7 @@ The Auto-Categorization System intelligently suggests transaction categories as 
 #### Core Service
 ```java
 // AutoCategoryService.java - Keyword-based categorization engine
-- Keyword matching algorithm with confidence scoring
+- Keyword matching algorithm
 - 8 predefined categories with extensive keyword libraries
 - Locale.ROOT string operations for consistency
 - Thread-safe implementation
@@ -51,7 +50,6 @@ The Auto-Categorization System intelligently suggests transaction categories as 
 // Transaction.java - Extended with AI fields
 - predictedCategory: String (AI suggestion)
 - categorySource: String (MANUAL/AUTO tracking)
-- confidence: Double (0.0-1.0 confidence score)
 ```
 
 #### REST API
@@ -59,7 +57,7 @@ The Auto-Categorization System intelligently suggests transaction categories as 
 // TransactionController.java - New endpoint
 POST /api/transactions/predict-category
 - Input: transaction description
-- Output: predicted category + confidence score
+- Output: predicted category
 - Security: Input sanitization, SSRF protection
 ```
 
@@ -105,20 +103,19 @@ POST /api/transactions/predict-category
 ### Real-World Scenarios
 ```
 Input: "McDonald's lunch"
-→ Prediction: "Food & Dining" (95% confidence)
+→ Prediction: "Food & Dining"
 
 Input: "Uber ride to airport"  
-→ Prediction: "Transport" (88% confidence)
+→ Prediction: "Transport"
 
 Input: "Netflix monthly subscription"
-→ Prediction: "Entertainment" (92% confidence)
+→ Prediction: "Entertainment"
 
 Input: "Grocery shopping at Walmart"
-→ Prediction: "Shopping" (87% confidence)
+→ Prediction: "Shopping"
 ```
 
 ### Edge Cases Handled
-- **Ambiguous descriptions**: Lower confidence scores
 - **Unknown keywords**: Falls back to "Other" category
 - **Mixed categories**: Prioritizes primary keyword match
 
