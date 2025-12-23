@@ -1,0 +1,40 @@
+@import "./theme.css";
+
+html,body,#root { height:100%; }
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  margin: 0;
+  -webkit-font-smoothing:antialiased;
+  transition: background-color var(--transition-medium) var(--transition-ease),
+              color var(--transition-medium) var(--transition-ease),
+              border-color var(--transition-fast) var(--transition-ease),
+              box-shadow var(--transition-fast) var(--transition-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation-duration: 1ms !important; }
+}
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  padding: 18px;
+}
+
+h1,h2,h3 { color: var(--color-text); margin:0 0 8px 0; }
+.muted { color: var(--color-muted); font-size: var(--fs-sm); }
+
+.btn {
+  background: var(--color-primary);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+.btn.ghost { background: transparent; border: 1px solid rgba(0,0,0,0.06); color: var(--color-text); }
+

@@ -16,7 +16,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.dao.DataAccessException;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +34,6 @@ import org.springframework.data.domain.PageRequest;
 public class TransactionController {
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
-    
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final AutoCategoryService autoCategoryService;
@@ -38,6 +42,63 @@ public class TransactionController {
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
         this.autoCategoryService = autoCategoryService;
+    }
+
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportTransactions(@RequestParam(defaultValue = "csv") String format, Authentication auth) {
+        try {
+            User user = userRepository.findByEmail(auth.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            List<Transaction> transactions = transactionRepository.findByUserOrderByCreatedAtDesc(user);
+
+            if ("csv".equalsIgnoreCase(format)) {
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8));
+                writer.println("Description,Amount,Type,Category,Date,CreatedAt");
+                for (Transaction t : transactions) {
+                    writer.printf("\"%s\",%s,%s,\"%s\",%s,%s\n",
+                        t.getDescription().replaceAll("\"", "'"),
+                        t.getAmount(),
+                        t.getType(),
+                        t.getCategory().replaceAll("\"", "'"),
+                        t.getDate() != null ? t.getDate().toString() : "",
+                        t.getCreatedAt() != null ? t.getCreatedAt().toString() : ""
+                    );
+                }
+                writer.flush();
+                byte[] csvBytes = out.toByteArray();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.parseMediaType("text/csv"));
+                headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transactions.csv");
+                return new ResponseEntity<>(csvBytes, headers, HttpStatus.OK);
+            } else if ("pdf".equalsIgnoreCase(format)) {
+                // Simple PDF export using plain text (for demo; use iText or Apache PDFBox for real PDF)
+                StringBuilder sb = new StringBuilder();
+                sb.append("Transactions\n\n");
+                sb.append("Description | Amount | Type | Category | Date | CreatedAt\n");
+                for (Transaction t : transactions) {
+                    sb.append(String.format("%s | %s | %s | %s | %s | %s\n",
+                        t.getDescription(),
+                        t.getAmount(),
+                        t.getType(),
+                        t.getCategory(),
+                        t.getDate() != null ? t.getDate().toString() : "",
+                        t.getCreatedAt() != null ? t.getCreatedAt().toString() : ""
+                    ));
+                }
+                byte[] pdfBytes = sb.toString().getBytes(StandardCharsets.UTF_8);
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_PDF);
+                headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=transactions.pdf");
+                return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.badRequest().body(null);
+            }
+        } catch (Exception e) {
+            logger.error("Failed to export transactions: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
     }
 
     @PostMapping

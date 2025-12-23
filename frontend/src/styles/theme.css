@@ -1,0 +1,43 @@
+:root {
+  /* Base tokens (light theme) */
+  --color-bg: #f6f7fb;
+  --color-card: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #6b7280;
+  --color-primary: #0ea5e9;
+  --color-accent: #22c55e;
+  --color-danger: #ef4444;
+  --font-sans: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  --fs-base: 16px;
+  --fs-sm: 13px;
+  --radius-md: 8px;
+  --shadow-soft: 0 1px 3px rgba(16,24,40,0.04), 0 1px 2px rgba(16,24,40,0.06);
+  --transition-fast: 180ms;
+  --transition-medium: 420ms;
+  --transition-ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+
+/* Dark theme overrides */
+:root[data-theme="dark"] {
+  --color-bg: #071428;
+  --color-card: #0b1220;
+  --color-text: #e6eef8;
+  --color-muted: #94a3b8;
+  --color-primary: #4cc9f0;
+  --color-accent: #2ecc71;
+  --color-danger: #ff7b7b;
+}
+
+body {
+  background: var(--color-bg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  color: var(--color-text);
+  transition: background-color var(--transition-medium) var(--transition-ease),
+              color var(--transition-medium) var(--transition-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --transition-fast: 1ms; --transition-medium: 1ms; }
+}
+

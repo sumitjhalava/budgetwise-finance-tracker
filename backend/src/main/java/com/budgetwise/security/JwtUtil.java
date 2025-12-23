@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -20,7 +21,21 @@ public class JwtUtil {
     private String secret;
 
     @Value("${jwt.expiration-ms}")
+    private String expirationRaw;
+
     private long expirationMs;
+
+    @PostConstruct
+    public void init() {
+        try {
+            // allow values like "86400000" or "86400000#24hours" — extract digits
+            String digits = expirationRaw.replaceAll("[^0-9]", "");
+            this.expirationMs = Long.parseLong(digits);
+        } catch (Exception ex) {
+            // fallback to 24 hours
+            this.expirationMs = 86400000L;
+        }
+    }
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));

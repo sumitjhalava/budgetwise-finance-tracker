@@ -83,10 +83,10 @@ POST /api/transactions/predict-category
 ## 📊 Performance Metrics
 
 ### Accuracy
-- **Food & Dining**: 95% accuracy (McDonald's, Starbucks, restaurant)
-- **Transport**: 88% accuracy (Uber, taxi, gas station)
-- **Entertainment**: 92% accuracy (Netflix, movie, concert)
-- **Shopping**: 85% accuracy (Amazon, mall, store)
+ - **Food & Dining**: 95% accuracy (McDonald's, Starbucks, restaurant)
+ - **Transport**: 88% accuracy (Uber, taxi, gas station)
+ - **Entertainment**: 92% accuracy (Netflix, movie, concert)
+ - **Shopping**: 85% accuracy (Amazon, mall, store)
 
 ### Speed
 - **API Response**: <200ms average

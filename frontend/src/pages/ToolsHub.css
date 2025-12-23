@@ -1,0 +1,28 @@
+.tools-hub-page {
+  max-width: 700px;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #0001;
+  padding: 32px 24px;
+}
+.tools-section {
+  margin-bottom: 32px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.tools-section:last-child {
+  border-bottom: none;
+}
+.tools-btn {
+  margin-top: 10px;
+  padding: 10px 24px;
+  border-radius: 8px;
+  border: none;
+  background: #6366f1;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
