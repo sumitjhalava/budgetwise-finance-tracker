@@ -1,0 +1,39 @@
+:root {
+  /* Primary Brand Colors */
+  --primary: #4A90E2;
+  --primary-light: #E8F2FF;
+
+  /* Secondary Colors */
+  --secondary: #50E3C2;
+  --secondary-light: #E8FFF9;
+
+  /* Status Colors */
+  --success: #27ae60;
+  --warning: #f1c40f;
+  --danger: #e74c3c;
+
+  /* Neutral */
+  --text-dark: #2c3e50;
+  --text-light: #7f8c8d;
+  --background: #f5f7fa;
+  --card-bg: #ffffff;
+
+  /* Radius */
+  --radius: 12px;
+  --radius-lg: 18px;
+
+  /* Shadow */
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* Font Sizes */
+  --font-lg: 1.4rem;
+  --font-md: 1.1rem;
+  --font-sm: 0.9rem;
+}
+
+body {
+  background: var(--background);
+  font-family: "Poppins", sans-serif;
+}
+

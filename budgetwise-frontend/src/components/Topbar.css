@@ -1,0 +1,63 @@
+.topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: var(--card-bg);
+  border-bottom: 1px solid #eef2f6;
+  transition: all 0.3s ease;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-btn {
+  font-size: 18px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: var(--menu-bg);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.topbar-title {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+.topbar-right .user-name {
+  font-weight: 600;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+/* =========================
+   TOPBAR – DARK MODE FIX
+   ========================= */
+
+.dashboard-wrapper.dark {
+  --card-bg: linear-gradient(180deg, #020617, #0f172a);
+  --text-color: #e5e7eb;
+  --menu-bg: #1e293b;
+}
+
+/* Border fix */
+.dashboard-wrapper.dark .topbar {
+  border-bottom: 1px solid #1e293b;
+}
+
+/* Hover states */
+.dashboard-wrapper.dark .menu-btn:hover {
+  background: #334155;
+}
+
+.dashboard-wrapper.dark .topbar-right .user-name {
+  color: #f9fafb;
+}

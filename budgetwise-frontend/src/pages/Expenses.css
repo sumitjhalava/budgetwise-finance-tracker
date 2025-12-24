@@ -1,0 +1,470 @@
+/* Map local variables to global theme variables */
+:root {
+  --bg: var(--bg-primary);
+  --card: var(--card-bg);
+  --primary: var(--accent-color);
+  --secondary: #06b6d4;
+  /* Keep specific secondary or map if needed */
+  --text: var(--text-primary);
+  --muted: var(--text-secondary);
+  --border: var(--border-color);
+  --danger: #ef4444;
+  --radius: 18px;
+  --shadow: var(--card-shadow);
+}
+
+/* base */
+* {
+  box-sizing: border-box
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Poppins', sans-serif;
+  background-color: var(--bg-primary) !important;
+  /* Force global bg */
+  color: var(--text);
+}
+
+.expenses-wrap {
+  padding: 40px 20px;
+  min-height: 100vh;
+  /* Light Mode "Profile" Gradient */
+  background: radial-gradient(circle at 10% 20%, rgb(255, 228, 230) 0%, rgb(204, 251, 241) 90%) !important;
+}
+
+/* DIRECT EXPENSES OVERRIDE */
+[data-theme="dark"] .expenses-wrap {
+  /* Dark Mode "Profile" Gradient */
+  background: radial-gradient(circle at 10% 20%, #1e293b 0%, #0f172a 90%) !important;
+}
+
+/* header */
+.expenses-header {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+}
+
+.expenses-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.header-sub {
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+/* grid */
+.cards-row {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 26px;
+  align-items: start;
+}
+
+/* card */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(15, 23, 42, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+/* add card */
+.add-card .card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.muted {
+  color: var(--muted)
+}
+
+.form-col {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-col label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.form-col input,
+.form-col select {
+  padding: 10px 12px;
+  /* Decreased padding */
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  /* Use card background or explicit variable */
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 13px;
+  /* Slightly smaller text */
+}
+
+.form-col input:focus,
+.form-col select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn {
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(79, 70, 229, 0.25);
+}
+
+.btn.outline {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--secondary);
+}
+
+/* summary */
+.summary {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #eef2ff, #f0fdfa);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.summary-amount {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--primary);
+}
+
+/* filter */
+.filter-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-item label {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.filter-item input,
+.filter-item select {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.filter-total {
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* list */
+.list-heading {
+  margin: 20px 0 12px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.empty {
+  padding: 30px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.expenses-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* expense row */
+.expense-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  border-radius: 16px;
+  /* CHANGED: Use variable instead of hardcoded #fff */
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  transition: .2s ease;
+  /* Ensure text color inherits */
+  color: var(--text-primary);
+}
+
+/* DARK MODE LIST FIX */
+[data-theme="dark"] .expense-row {
+  background: #1e293b !important;
+  border-color: #334155;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .expense-row .amount {
+  color: #38bdf8 !important;
+  /* Bright Blue */
+}
+
+[data-theme="dark"] .expense-row .meta {
+  color: #94a3b8 !important;
+  /* Light Grey */
+}
+
+/* DARK MODE FILTERS FIX */
+[data-theme="dark"] .filter-item input,
+[data-theme="dark"] .filter-item select {
+  background: #1e293b;
+  color: #fff;
+  border-color: #475569;
+}
+
+.expense-row:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+}
+
+/* left */
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.icon {
+  font-size: 16px
+}
+
+.meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* right */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.amount {
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--primary);
+}
+
+.delete {
+  background: #fee2e2;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #b91c1c;
+  font-weight: 900;
+  transition: .2s;
+}
+
+.delete:hover {
+  background: #fecaca;
+  transform: scale(1.05);
+}
+
+/* category colors */
+.badge.food {
+  background: #fff7ed;
+  color: #c2410c
+}
+
+.badge.shopping {
+  background: #eef2ff;
+  color: #3730a3
+}
+
+.badge.bills {
+  background: #fef2f2;
+  color: #b91c1c
+}
+
+.badge.travel {
+  background: #ecfdf5;
+  color: #047857
+}
+
+.badge.entertainment {
+  background: #f5f3ff;
+  color: #6d28d9
+}
+
+/* responsive */
+@media(max-width:980px) {
+  .cards-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Add expense comes FIRST on mobile */
+  .add-card {
+    order: 1;
+  }
+
+  /* List + filter comes AFTER */
+  .list-card {
+    order: 2;
+  }
+}
+
+/* Attractive Add Expense background (fixed override) */
+/* Attractive Add Expense background (fixed override) */
+.add-card.card.add-card-bg {
+  background: linear-gradient(135deg,
+      #e0f2fe,
+      /* light sky blue */
+      #ecfdf5
+      /* soft mint green */
+    ) !important;
+
+  border: 1px solid #bae6fd;
+  box-shadow: 0 18px 50px rgba(14, 165, 233, 0.18);
+}
+
+/* DARK MODE OVERRIDE FOR ADD CARD */
+[data-theme="dark"] .add-card.card.add-card-bg {
+  background: linear-gradient(135deg, #1e293b, #0f172a) !important;
+  border-color: #334155;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* Ensure text inside add card is readable */
+.add-card.card.add-card-bg h2,
+.add-card.card.add-card-bg label {
+  color: #0f172a;
+  /* dark slate */
+  font-weight: 700;
+}
+
+/* Dark Mode Text */
+[data-theme="dark"] .add-card.card.add-card-bg h2,
+[data-theme="dark"] .add-card.card.add-card-bg label {
+  color: #f1f5f9;
+  /* Bright white/grey */
+}
+
+/* Inputs stay clean and readable */
+.add-card.card.add-card-bg input,
+.add-card.card.add-card-bg select {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5f5;
+}
+
+[data-theme="dark"] .add-card.card.add-card-bg input,
+[data-theme="dark"] .add-card.card.add-card-bg select {
+  background: #334155;
+  /* Dark background */
+  color: #ffffff;
+  /* White text */
+  border: 1px solid #475569;
+}
+
+/* Input focus effect */
+.add-card.card.add-card-bg input:focus,
+.add-card.card.add-card-bg select:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+/* Buttons look premium on this background */
+.add-card.card.add-card-bg .btn.primary {
+  background: linear-gradient(90deg, #0ea5e9, #22c55e);
+  box-shadow: 0 10px 28px rgba(34, 197, 94, 0.35);
+}
+
+.add-card.card.add-card-bg .btn.outline {
+  background: #ffffff;
+  border: 1px solid #93c5fd;
+  color: #0284c7;
+}
+
+/* 🌙 DARK MODE Outline Button Fix */
+[data-theme="dark"] .add-card.card.add-card-bg .btn.outline {
+  background: transparent;
+  border-color: #94a3b8;
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .add-card.card.add-card-bg .btn.outline:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 🌙 DARK MODE Global Text Fixes */
+[data-theme="dark"] .filter-total,
+[data-theme="dark"] .list-heading {
+  color: #f1f5f9;
+}
+
+[data-theme="dark"] .filter-item label {
+  color: #cbd5e1;
+}
+
+/* 🌙 DARK MODE Filter Date Inputs */
+[data-theme="dark"] .filter-item input[type="date"] {
+  color-scheme: dark;
+  /* Makes calendar icon white */
+}

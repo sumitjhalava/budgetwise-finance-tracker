@@ -1,0 +1,165 @@
+.profile-container {
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Align closer to top */
+    min-height: 100vh;
+    /* CUTE BACKGROUND PATTERN */
+    background: radial-gradient(circle at 10% 20%, rgb(255, 228, 230) 0%, rgb(204, 251, 241) 90%);
+    transition: background 0.3s ease;
+}
+
+[data-theme="dark"] .profile-container {
+    background: radial-gradient(circle at 10% 20%, #1e293b 0%, #0f172a 90%);
+}
+
+.profile-card {
+    background: rgba(255, 255, 255, 0.9);
+    /* Glass effect */
+    padding: 30px;
+    width: 100%;
+    max-width: 480px;
+    /* REDUCED SIZE AS REQUESTED */
+    border-radius: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+}
+
+[data-theme="dark"] .profile-card {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.profile-photo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.profile-photo-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #e0f2fe, #f0fdfa);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    color: var(--accent-color);
+    border: 4px solid #fff;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.upload-label {
+    display: block;
+    margin-top: 10px;
+    cursor: pointer;
+    color: var(--accent-color);
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+[data-theme="dark"] .upload-label {
+    color: #ffffff !important;
+    /* Force white in dark mode */
+    text-decoration: underline;
+    /* Extra visibility */
+}
+
+.upload-label:hover {
+    text-decoration: underline;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    display: block;
+}
+
+[data-theme="dark"] .form-label {
+    color: #ffffff !important;
+    /* Force bright white in dark mode */
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid #cbd5e1;
+    /* Thicker, visible border in light mode */
+    font-size: 15px;
+    background: #ffffff;
+    /* Force white bg in light mode */
+    color: var(--text-primary);
+    transition: border-color 0.2s, background 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    /* Subtle depth */
+}
+
+/* Specific Dark Mode Input Styles */
+[data-theme="dark"] .form-input {
+    background: #0f172a;
+    /* Dark background */
+    border: 2px solid #475569;
+    /* Visible grey border */
+    color: #ffffff;
+    /* Pure white text */
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    background: var(--bg-primary);
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
+    /* Focus ring */
+}
+
+.form-input:read-only {
+    background: var(--bg-primary);
+    opacity: 0.7;
+}
+
+.save-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    /* Light Mode Default: Strong Gradient */
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+[data-theme="dark"] .save-btn {
+    background: #38bdf8;
+    /* Brighter blue in dark mode */
+    color: #0f172a;
+    /* Dark text for contrast against bright button */
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    /* Glow effect */
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}

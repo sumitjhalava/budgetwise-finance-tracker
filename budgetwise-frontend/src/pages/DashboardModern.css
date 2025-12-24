@@ -1,0 +1,259 @@
+.dashboard-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 16px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.dashboard-welcome {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.dashboard-subtitle {
+  color: var(--text-secondary);
+  /* Use variable instead of hardcoded #555 */
+  margin-bottom: 20px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+/* Card base styling */
+/* Card base styling - more curved & soft */
+/* Card base styling - more curved & soft */
+/* Card base styling */
+.card {
+  border-radius: 24px !important;
+  /* Premium Squircle */
+  padding: 20px;
+  min-height: 140px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  /* Softer base shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  /* Important for floating icon */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-content {
+  position: relative;
+  z-index: 2;
+  /* Keep name and value on top */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Rounded Icon Background */
+.card-icon-circle {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* BIG FLOATING BACKGROUND ICON */
+.card-bg-icon {
+  position: absolute;
+  right: -25px;
+  bottom: -35px;
+  font-size: 140px;
+  /* Massive */
+  opacity: 0.12;
+  /* Faint watermark effect */
+  color: #fff;
+  transform: rotate(-15deg);
+  z-index: 1;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .card-bg-icon {
+  transform: rotate(0deg) scale(1.1);
+  /* Subtle animation on hover */
+  opacity: 0.2;
+}
+
+
+/* Enhanced Gradients */
+.card:nth-child(1) {
+  background: linear-gradient(135deg, #0ea5e9, #60a5fa);
+}
+
+.card:nth-child(2) {
+  background: linear-gradient(135deg, #22c55e, #86efac);
+}
+
+.card:nth-child(3) {
+  background: linear-gradient(135deg, #f59e0b, #fcd34d);
+}
+
+
+/* Card Text */
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.9;
+  color: #fff;
+  /* Always white on gradient */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  font-size: 26px;
+  /* Bigger impact */
+  font-weight: 800;
+  color: #fff;
+}
+
+/* Chart card */
+.chart-card {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: var(--text-primary);
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+/* Recent expenses card */
+.recent-expenses {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--card-shadow);
+  color: var(--text-primary);
+}
+
+.recent-expenses ul {
+  padding-left: 20px;
+}
+
+.recent-expenses li {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* Savings progress */
+.savings-progress {
+  background: var(--card-bg);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--card-shadow);
+  color: var(--text-primary);
+}
+
+.progress-bar {
+  width: 100%;
+  background: var(--border-color);
+  border-radius: 12px;
+  height: 18px;
+  margin: 10px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 12px;
+  transition: width 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-welcome {
+    font-size: 24px;
+  }
+
+  .card-value {
+    font-size: 18px;
+  }
+}
+
+/* Mobile header (hamburger) */
+.mobile-header {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+/* Show hamburger on tablets & phones */
+@media (max-width: 1024px) {
+  .mobile-header {
+    display: flex;
+  }
+}
+
+/* Sidebar responsive sliding */
+/* DIRECT DASHBOARD OVERRIDE - PREMIUM GRADIENT */
+.dashboard-wrapper {
+  display: flex;
+  min-height: 100vh;
+  /* Light Mode "Profile" Gradient */
+  background: radial-gradient(circle at 10% 20%, rgb(255, 228, 230) 0%, rgb(204, 251, 241) 90%) !important;
+  width: 100%;
+}
+
+/* Dark Mode "Profile" Gradient */
+[data-theme="dark"] .dashboard-wrapper {
+  background: radial-gradient(circle at 10% 20%, #1e293b 0%, #0f172a 90%) !important;
+}
+
+/* Fix Cards in Dark Mode */
+[data-theme="dark"] .chart-card,
+[data-theme="dark"] .recent-expenses,
+[data-theme="dark"] .savings-progress {
+  background: #1e293b !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  border: 1px solid #334155;
+}
+
+[data-theme="dark"] .dashboard-welcome,
+[data-theme="dark"] .dashboard-subtitle {
+  color: #fff !important;
+}
+
+/* Sidebar styling stays as is */
+.sidebar {
+  width: 260px;
+  transition: transform 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    height: 100%;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+}

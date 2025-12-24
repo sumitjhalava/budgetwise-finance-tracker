@@ -1,0 +1,52 @@
+.home-wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* REAL IMAGE CONTROL */
+.home-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: right center; /* desktop look */
+  z-index: -1;
+}
+
+/* CONTENT CARD */
+.content-box {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 30px;
+  border-radius: 14px;
+  text-align: center;
+  max-width: 700px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* MOBILE — FIXED & GUARANTEED */
+@media (max-width: 768px) {
+  .home-wrapper {
+    min-height: 100svh;
+    padding: 20px;
+  }
+
+  .home-bg {
+    object-position: center top; /* SHOW TOP PART IN MOBILE */
+  }
+
+  .content-box h1 {
+    font-size: 2.2rem;
+  }
+
+  .content-box p {
+    font-size: 1.2rem;
+  }
+}

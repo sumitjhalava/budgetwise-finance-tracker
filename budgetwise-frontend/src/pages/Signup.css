@@ -1,0 +1,80 @@
+/* Signup.css */
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  background: var(--background);
+}
+
+.signup-card {
+  width: 360px;
+  padding: 40px;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.signup-card h1 {
+  text-align: center;
+  font-size: 24px;
+  color: var(--text-dark);
+  margin-bottom: 24px;
+}
+
+.signup-form input {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--text-light);
+  margin-bottom: 12px;
+  font-size: 14px;
+  transition: border 0.2s;
+}
+
+.signup-form input:focus {
+  outline: none;
+  border-color: var(--success);
+  box-shadow: 0 0 5px rgba(39, 174, 96, 0.3);
+}
+
+.signup-form button {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  border: none;
+  background-color: var(--success);
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+
+.signup-form button:hover {
+  background-color: #1e874b;
+}
+
+.error-text {
+  color: var(--danger);
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.signup-footer {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 12px;
+  color: var(--text-dark);
+}
+
+.signup-footer a {
+  color: var(--success);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-footer a:hover {
+  text-decoration: underline;
+}
+

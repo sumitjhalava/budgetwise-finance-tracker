@@ -20,9 +20,10 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (!validateUrl(config.baseURL || ALLOWED_BASE_URL)) {
-    throw new Error('Invalid URL: Only localhost:8081 is allowed');
+    throw new Error(`Invalid URL: Only ${new URL(ALLOWED_BASE_URL).origin} is allowed`);
   }
-  const token = sessionStorage.getItem('token');
+  // prefer the app-specific stored token (`bw_token`) but fall back to session key
+  const token = localStorage.getItem('bw_token') || sessionStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -30,12 +31,13 @@ api.interceptors.request.use((config) => {
 });
 
 export const authAPI = {
-  login: (credentials) => api.post('/auth/login', credentials),
-  signup: (userData) => api.post('/auth/signup', userData),
+  login: (credentials) => api.post('/api/auth/login', credentials),
+  signup: (userData) => api.post('/api/auth/signup', userData),
 };
 
 const sanitizeParam = (param) => {
-  return encodeURIComponent(String(param).replace(/[^\w\-]/g, ''));
+  // allow word chars and hyphen; no unnecessary escape
+  return encodeURIComponent(String(param).replace(/[^\w-]/g, ''));
 };
 
 export const transactionAPI = {
