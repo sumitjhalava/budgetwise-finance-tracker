@@ -11,7 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { FaMoneyBillWave, FaWallet, FaPiggyBank, FaBars } from "react-icons/fa";
+import { FaMoneyBillWave, FaWallet, FaBars } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import ErrorBoundary from "../components/ErrorBoundary";
 import "./DashboardModern.css";
@@ -182,11 +182,7 @@ export default function Dashboard() {
             <div className="card-value">₹{totalIncome}</div>
           </div>
 
-          <div className="card">
-            <div className="card-icon"><FaPiggyBank /></div>
-            <div className="card-title">Balance</div>
-            <div className="card-value">₹{balance}</div>
-          </div>
+          {/* Balance card removed per request */}
         </section>
 
         <section className="charts-row">

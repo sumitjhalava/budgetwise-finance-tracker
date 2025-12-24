@@ -1,0 +1,55 @@
+/* Super CSS for Forum page: roomy, modern chat layout */
+.forum-page {
+  max-width: 1200px;
+  margin: 28px auto;
+  padding: 28px;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color: #0f172a;
+}
+.forum-header {
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  margin-bottom:18px;
+}
+.forum-header h1 { margin:0; font-size:24px; }
+.forum-header .subtitle { margin:4px 0 0 0; color:#475569; font-size:13px; }
+.forum-status { font-size:13px; padding:6px 10px; border-radius:999px; }
+.forum-status.online { background:#ecfdf5; color:#064e3b; border:1px solid #bbf7d0; }
+.forum-status.offline { background:#fff7ed; color:#7c2d12; border:1px solid #ffedd5; }
+
+.forum-grid { display:grid; grid-template-columns: 320px 1fr; gap:18px; }
+.forum-sidebar .forum-card, .forum-chat-card { background:#fff; border-radius:12px; padding:16px; box-shadow:0 8px 30px rgba(2,6,23,0.04); border:1px solid #f1f5f9; }
+.forum-sidebar .forum-card h3 { margin-top:0; }
+.forum-sidebar ul, .forum-sidebar ol { margin:8px 0 0 16px; color:#334155; }
+
+.topics ul li { display:flex; justify-content:space-between; align-items:center; padding:8px 6px; border-radius:8px; cursor:pointer; }
+.topics ul li:hover { background:#f8fafc; }
+.topics .count { background:#eef2ff; color:#4338ca; padding:4px 8px; border-radius:999px; font-size:12px; }
+
+.forum-main { min-height: 480px; }
+.forum-chat-card { display:flex; flex-direction:column; height:100%; min-height:480px; }
+.messages { flex:1 1 auto; overflow:auto; padding:12px; display:flex; flex-direction:column; gap:12px; }
+.empty { color:#64748b; text-align:center; padding:40px 0; }
+
+.post { display:flex; gap:12px; align-items:flex-start; }
+.post .avatar { width:44px; height:44px; border-radius:10px; background:#eef2ff; color:#0f172a; display:flex; align-items:center; justify-content:center; font-weight:700; }
+.post-body { background:#ffffff; border-radius:10px; padding:10px 12px; box-shadow:0 6px 20px rgba(2,6,23,0.03); width:100%; }
+.post-meta { display:flex; gap:8px; align-items:center; color:#475569; font-size:13px; margin-bottom:6px; }
+.post-text { font-size:15px; color:#0f172a; margin-bottom:8px; }
+.post-actions { display:flex; gap:12px; }
+.post-actions .action { background:transparent; border:none; color:#475569; cursor:pointer; }
+
+
+.chat-input { display:flex; gap:8px; padding:12px; border-top:1px solid #eef2f7; }
+.chat-input input { flex:1; padding:12px 14px; border-radius:10px; border:1px solid #e6e9ef; font-size:14px; }
+.send-btn { background:#0f766e; color:white; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; }
+
+.profile-row { display:flex; gap:12px; align-items:center; }
+.avatar.small { width:48px; height:48px; border-radius:10px; background:#e6fffa; display:flex; align-items:center; justify-content:center; font-weight:700; color:#065f46; }
+.pname { font-weight:700; }
+.name-edit { border:1px solid #eef2f7; padding:6px 8px; border-radius:8px; margin-top:6px; }
+
+
+@media (max-width: 900px) {
+  .forum-grid { grid-template-columns: 1fr; }
+  .forum-sidebar { order:2; }
+}

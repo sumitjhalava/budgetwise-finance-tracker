@@ -6,6 +6,7 @@
   align-items: center;
   position: relative;
   background: linear-gradient(135deg, #16222a, #2b5876);
+  padding-left: 0;
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
 }
@@ -223,6 +224,11 @@
   .auth-card {
     width: 92%;
     padding: 32px 22px;
+  }
+
+  .auth-page {
+    justify-content: center;
+    padding-left: 0;
   }
 
   .auth-title {

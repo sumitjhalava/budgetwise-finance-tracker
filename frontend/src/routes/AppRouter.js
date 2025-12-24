@@ -12,6 +12,7 @@ import Budget from "../pages/Budget";
 import Expenses from "../pages/Expenses";
 import CategoryAccuracy from "../pages/CategoryAccuracy";
 import ToolsHub from "../pages/ToolsHub";
+import Forum from "../pages/Forum";
 import ProtectedRoute from "../components/ProtectedRoute";
 
 export default function AppRouter() {
@@ -77,6 +78,14 @@ export default function AppRouter() {
               <ToolsHub />
             </ProtectedRoute>
           }
+        />
+        <Route
+         path="/forum"
+         element={
+           <ProtectedRoute>
+             <Forum />
+           </ProtectedRoute>
+         }
         />
         <Route
           path="/CategoryAccuracy"

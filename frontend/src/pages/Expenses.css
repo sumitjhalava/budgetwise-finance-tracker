@@ -129,9 +129,16 @@ body{
 .filter-top{
   display:flex;
   justify-content:space-between;
-  align-items:flex-end;
+  align-items:center;
   gap:14px;
   flex-wrap:wrap;
+  max-width:1100px;
+  margin:0 auto 12px;
+  padding:12px 14px;
+  border-radius:12px;
+  background: var(--color-card, #ffffff);
+  border:1px solid rgba(15,23,42,0.04);
+  box-shadow: var(--shadow-soft, 0 1px 3px rgba(16,24,40,0.04));
 }
 
 .filter-controls{
@@ -139,6 +146,28 @@ body{
   gap:14px;
   flex-wrap:wrap;
 }
+
+/* make filter items align neatly in a row */
+.filter-item{
+  display:flex;
+  flex-direction:column;
+  min-width:140px;
+}
+.filter-item input,
+.filter-item select{
+  width: 200px;
+  max-width: calc(100vw - 420px);
+}
+
+/* Date filter area: push to the right inside filter-top */
+.filter-date{
+  margin-left:auto;
+  display:flex;
+  gap:8px;
+  align-items:flex-end;
+}
+
+.filter-date label{ margin-bottom:0; }
 
 .filter-item{
   display:flex;
@@ -160,9 +189,66 @@ body{
   align-items:center;
   gap:14px;
 }
+.filter-actions .clear-btn{ display:inline-flex; }
+
+/* Clear filters button styling */
+.btn.clear,
+.btn.clear:focus{
+  padding:8px 12px;
+  border-radius:10px;
+  background: transparent;
+  border:1px solid rgba(15,23,42,0.06);
+  color: var(--muted);
+  cursor:pointer;
+  font-weight:700;
+}
+.btn.clear:hover{
+  background: rgba(15,23,42,0.02);
+  color: var(--color-text, #0f172a);
+}
+.btn.danger{
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.18);
+  color: var(--color-danger, #b91c1c);
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700;
+}
+.btn.danger:hover{
+  background: rgba(239,68,68,0.12);
+}
+.btn.danger:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
 .filter-total{
   font-weight:800;
-  color:var(--primary);
+  color:var(--color-text, #0f172a);
+  margin-left:auto;
+  text-align:right;
+}
+
+/* Summary card sits below filters but matches visual style */
+.summary-card{
+  max-width:1100px;
+  margin:0 auto 24px;
+  padding:12px 14px;
+  border-radius:12px;
+  background: var(--color-card, #ffffff);
+  border:1px solid rgba(15,23,42,0.04);
+  box-shadow: var(--shadow-soft, 0 1px 3px rgba(16,24,40,0.04));
+  display:flex;
+  gap:20px;
+  justify-content:flex-start;
+  align-items:center;
+}
+.summary-card > div{ flex: 1 1 auto }
+
+@media (max-width:980px){
+  .filter-item input,.filter-item select{ width:140px; max-width:40vw }
+  .filter-total{ width:100%; margin-left:0; text-align:left; margin-top:8px }
+  .summary-card{ flex-direction:column; align-items:flex-start }
 }
 
 /* list */
@@ -186,6 +272,7 @@ body{
   flex-direction:row;
   flex-wrap:wrap;
   gap:14px;
+  align-items:stretch; /* ensure items stretch for equal height */
 }
 
 /* expense row */
@@ -202,6 +289,8 @@ body{
   transition: transform var(--transition-fast,180ms) var(--transition-ease, ease), box-shadow var(--transition-fast,180ms);
   flex: 0 1 320px;
   min-width: 240px;
+  min-height: 160px; /* make boxes visually equal height */
+  justify-content: space-between; /* space content vertically for consistent layout */
 }
 
 .expense-row:hover{
@@ -215,6 +304,7 @@ body{
   flex-direction:column;
   gap:6px;
   width:100%;
+  flex:1; /* allow left to grow so rows stretch evenly */
 }
 
 .badge{
@@ -289,7 +379,7 @@ body{
 
 @media (max-width:600px) {
   .expenses-list { flex-direction: column; }
-  .expense-row { flex: 1 1 auto; min-width: auto; }
+  .expense-row { flex: 1 1 auto; min-width: auto; min-height: auto; }
   .right { align-self: flex-start; margin-top:8px; }
 }
 

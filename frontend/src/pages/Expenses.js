@@ -18,6 +18,7 @@ export default function Expenses() {
   const [filterCategory, setFilterCategory] = useState("");
   const [filterFromDate, setFilterFromDate] = useState("");
   const [filterToDate, setFilterToDate] = useState("");
+  const [clearingAll, setClearingAll] = useState(false);
 
   const categories = [
     { value: "", label: "All Categories" },
@@ -166,6 +167,21 @@ export default function Expenses() {
     loadExpenses();
   };
 
+  const handleClearAll = async () => {
+    if (!window.confirm("Are you sure you want to permanently delete ALL transactions? This cannot be undone.")) return;
+    try {
+      setClearingAll(true);
+      // delete all transactions in parallel, ignore individual failures
+      await Promise.all(expenses.map(e => transactionAPI.delete(e.id).catch(() => null)));
+      await loadExpenses();
+    } catch (err) {
+      console.error("Failed clearing transactions:", err);
+      alert("Failed to clear all transactions. Check the console for details.");
+    } finally {
+      setClearingAll(false);
+    }
+  };
+
   const handleEdit = (e) => {
     setAmount(e.amount);
     setCategory(e.category);
@@ -295,14 +311,23 @@ export default function Expenses() {
           </div>
         </div>
 
+        <div className="filter-actions">
+          <button className="btn clear" onClick={() => { setFilterCategory(''); setFilterFromDate(''); setFilterToDate(''); }}>
+            Clear Filters
+          </button>
+          <button
+            className="btn danger"
+            onClick={handleClearAll}
+            disabled={clearingAll}
+          >
+            {clearingAll ? 'Clearing...' : 'Reset All'}
+          </button>
+        </div>
+
         <div className="filter-total">Total Expenses: ₹{totalExpenseAmount} | Total Income: ₹{totalIncomeAmount}</div>
       </div>
 
-      <div className="summary-card" style={{marginBottom: 24}}>
-        <div>Total Budget: ₹{totalBudget}</div>
-        <div>Total Spent: ₹{totalSpent}</div>
-        <div>Savings: ₹{savings}</div>
-      </div>
+      {/* Summary removed per request */}
       <h3 className="list-heading">Expenses</h3>
       <ul className="expenses-list">
         {filteredExpenses.length ? (
